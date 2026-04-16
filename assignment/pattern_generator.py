@@ -38,23 +38,30 @@ COMMENT HABITS (practice these throughout the course):
 """
 
 import maya.cmds as cmds
+
+# for sin/cos equations
 import math
 
 # Clear the scene.
 cmds.file(new=True, force=True)
 
 def generate_pattern(object_count=12, circle_radius=10, row_count=2, pillar_height=10):
+    # setting up first loop with the separate rows
     for row in range(row_count):
+        # defining the inner radius pillars are positioned around; smaller radius will be for the inner row
         current_radius = circle_radius - (row * 6)
+        # second loop using sin/cos and the index to create circular pillars
         for i in range(object_count):
             angle = 2 * math.pi * i / object_count
             pos_x = math.cos(angle) * current_radius
             pos_z = math.sin(angle) * current_radius
 
+            # defining and creating the pillar shapes; using the index + rows for the naming convention
             pillar_name = f"pillar_r{row}_{i}"
             cmds.polyCylinder(name=pillar_name, radius=0.5, height=pillar_height)
             cmds.move(pos_x, 0, pos_z, pillar_name)
 
+            # conditional statement to scale down the inner pillars; if its in the first row it will be scaled down by specified values.
             if row == 1:
                 cmds.scale(0.5, 0.2, 0.5, pillar_name)
                 print(f"{pillar_name} Scaled down")
