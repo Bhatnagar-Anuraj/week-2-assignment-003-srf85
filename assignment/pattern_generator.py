@@ -45,7 +45,7 @@ import math
 # Clear the scene.
 cmds.file(new=True, force=True)
 
-def generate_pattern(object_count=12, circle_radius=10, row_count=2, pillar_height=10):
+def generate_pattern(object_count=12, circle_radius=10, row_count=3, pillar_height=10):
     # setting up first loop with the separate rows
     for row in range(row_count):
         # defining the inner radius pillars are positioned around; smaller radius will be for the inner row
@@ -57,14 +57,22 @@ def generate_pattern(object_count=12, circle_radius=10, row_count=2, pillar_heig
             pos_z = math.sin(angle) * current_radius
 
             # defining and creating the pillar shapes; using the index + rows for the naming convention
-            pillar_name = f"pillar_r{row}_{i}"
+            pillar_name = f"pillar_{row}_{i}"
             cmds.polyCylinder(name=pillar_name, radius=0.5, height=pillar_height)
-            cmds.move(pos_x, 0, pos_z, pillar_name)
+            cmds.move(pos_x, 5, pos_z, pillar_name)
 
-            # conditional statement to scale down the inner pillars; if its in the first row it will be scaled down by specified values.
-            if row == 1:
+            # conditional statement to scale down the inner pillars; if its greater than 0 it will scale down and move down the pillars
+            if row > 0:
                 cmds.scale(0.5, 0.2, 0.5, pillar_name)
-                print(f"{pillar_name} Scaled down")
+                cmds.move(pos_x, 0.75, pos_z, pillar_name)
+                print("small pillar")
+
+            # if the row # is equal to 0 it will create a new series of spheres and move them to the top of the pillars.
+            if row == 0:
+                orb_name = f"orb_{row}_{i}"
+                cmds.polySphere(name=orb_name, radius=0.5)
+                cmds.move(pos_x, 10, pos_z, orb_name)
+                print("altar orbs")
 
 # ---------------------------------------------------------------------------
 # Run the generator
