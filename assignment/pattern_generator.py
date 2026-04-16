@@ -38,51 +38,26 @@ COMMENT HABITS (practice these throughout the course):
 """
 
 import maya.cmds as cmds
+import math
 
 # Clear the scene.
 cmds.file(new=True, force=True)
 
+def generate_pattern(object_count=12, circle_radius=10, row_count=2, pillar_height=10):
+    for row in range(row_count):
+        current_radius = circle_radius - (row * 6)
+        for i in range(object_count):
+            angle = 2 * math.pi * i / object_count
+            pos_x = math.cos(angle) * current_radius
+            pos_z = math.sin(angle) * current_radius
 
-def generate_pattern():
-    """Generate a procedural pattern of objects using nested loops.
+            pillar_name = f"pillar_r{row}_{i}"
+            cmds.polyCylinder(name=pillar_name, radius=0.5, height=pillar_height)
+            cmds.move(pos_x, 0, pos_z, pillar_name)
 
-    This function should:
-        1. Define variables for rows, columns, and spacing.
-        2. Use a nested for-loop to iterate over rows and columns.
-        3. Inside the loop, use a conditional to vary object properties.
-        4. Create and position each object.
-    """
-    # --- Configuration variables ---
-    num_rows = 5        # Number of rows in the pattern.
-    num_cols = 5        # Number of columns in the pattern.
-    spacing = 3.0       # Distance between object centers.
-
-    # TODO: Create a nested loop that iterates over rows and columns.
-    #
-    # HINT -- your loop structure should look something like this:
-    #
-    #   for row in range(num_rows):
-    #       for col in range(num_cols):
-    #           # Calculate position
-    #           x_pos = col * spacing
-    #           z_pos = row * spacing
-    #
-    #           # TODO: Add a conditional here that changes something
-    #           # based on row, col, or (row + col).
-    #           # For example:
-    #           #   if (row + col) % 2 == 0:
-    #           #       create a cube
-    #           #   else:
-    #           #       create a sphere
-    #
-    #           # TODO: Create the object using cmds.polyCube(), etc.
-    #
-    #           # TODO: Position the object using cmds.move().
-    #
-    #           # TODO: (Optional) Vary the scale using cmds.scale().
-
-    pass  # Remove this line once you add your code.
-
+            if row == 1:
+                cmds.scale(0.5, 0.2, 0.5, pillar_name)
+                print(f"{pillar_name} Scaled down")
 
 # ---------------------------------------------------------------------------
 # Run the generator
